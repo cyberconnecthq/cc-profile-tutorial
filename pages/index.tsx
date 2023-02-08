@@ -244,14 +244,22 @@ export default function Home() {
           </p>
 
           {isMounted && isConnected ? (
-            <div className="flex gap-x-8">
+            <div className="flex w-1/3 gap-x-8 border mt-4 p-4 items-center">
               <p>Connected to {address}</p>
               <a className="text-blue-500" onClick={() => disconnect()}>
                 Disconnect
               </a>
             </div>
           ) : (
-            <button onClick={() => connect()}>Connect</button>
+            <div className="flex flex-col items-center justify-center gap-y-4">
+              <button
+                onClick={() => connect()}
+                className="bg-green-500 p-2 rounded mt-4"
+              >
+                Connect Wallet
+              </button>
+              <p>Make sure your wallet network is on BSC testnet.</p>
+            </div>
           )}
         </div>
         <div className="border w-1/3 mx-auto p-8 mt-8">
@@ -271,6 +279,7 @@ export default function Home() {
                 </a>
               ) : (
                 <input
+                  disabled={!isConnected}
                   className="h-[30px] p-4 rounded"
                   value={gasModeHandle || ""}
                   onChange={(e) => setGasModeHandle(e.target.value)}
@@ -280,6 +289,7 @@ export default function Home() {
             <button
               className="bg-green-500 px-4 rounded"
               onClick={() => mint()}
+              disabled={!isConnected}
             >
               Mint
             </button>
@@ -290,6 +300,7 @@ export default function Home() {
           <button
             className="bg-green-500 px-4 rounded mt-4"
             onClick={handleLogin}
+            disabled={!isConnected}
           >
             {isLoggedIn ? "Log out" : "Log in"}
           </button>
@@ -297,6 +308,7 @@ export default function Home() {
             <div className="flex items-center gap-x-4">
               <p>Handle</p>
               <input
+                disabled={!isConnected}
                 className="h-[30px] p-4 rounded"
                 value={gaslessModeHandle || ""}
                 onChange={(e) => setGaslessModeHandle(e.target.value)}
@@ -305,6 +317,7 @@ export default function Home() {
             <button
               className="bg-green-500 px-4 rounded"
               onClick={() => gaslessMint()}
+              disabled={!isConnected}
             >
               Mint
             </button>
