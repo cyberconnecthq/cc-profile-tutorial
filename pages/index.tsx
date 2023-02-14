@@ -207,13 +207,15 @@ export default function Home() {
     if (!address) {
       return;
     }
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `
 					mutation loginGetMessage($domain:String!,$address:AddressEVM! ) {
 					  loginGetMessage(input:{
 					    domain: $domain ,
@@ -223,12 +225,13 @@ export default function Home() {
 					  }
 					}
 				      `,
-        variables: {
-          domain: "cyberconnect.me",
-          address,
-        },
-      }),
-    });
+          variables: {
+            domain: "cyberconnect.me",
+            address,
+          },
+        }),
+      }
+    );
 
     const resp = await res.json();
 
@@ -240,13 +243,15 @@ export default function Home() {
   };
 
   const verifyLoginMessage = async (signature: string) => {
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `
 				  mutation loginVerify($domain:String!, $address:AddressEVM!, $signature:String!) 
 					{
 					  loginVerify(input:{
@@ -258,13 +263,14 @@ export default function Home() {
 					  }
 					}
 			      `,
-        variables: {
-          domain: "cyberconnect.me",
-          address,
-          signature,
-        },
-      }),
-    });
+          variables: {
+            domain: "cyberconnect.me",
+            address,
+            signature,
+          },
+        }),
+      }
+    );
 
     const resData = await res.json();
     if (resData.data.loginVerify.accessToken) {
@@ -274,14 +280,16 @@ export default function Home() {
   };
 
   const createSetMetadataTypedData = async (cid: string) => {
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          query: `
 				  mutation createSetMetadataTypedData($input: CreateSetMetadataTypedDataInput!) {
 					  createSetMetadataTypedData(input:$input){
 					  typedData {
@@ -292,14 +300,15 @@ export default function Home() {
 					  }
 				}
 			      `,
-        variables: {
-          input: {
-            metadata: cid,
-            profileId: primaryProfile?.profileID,
+          variables: {
+            input: {
+              metadata: cid,
+              profileId: primaryProfile?.profileID,
+            },
           },
-        },
-      }),
-    });
+        }),
+      }
+    );
 
     const resData = await res.json();
 
@@ -313,14 +322,16 @@ export default function Home() {
   };
 
   const createTypedData = async () => {
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          query: `
 				  mutation createTypedData($to:AddressEVM!, $handle:String!, $avatar:URL!, $metadata:String!, $operator:AddressEVM!) {
 					  createCreateProfileTypedData(input:{
 					    to:$to
@@ -333,15 +344,16 @@ export default function Home() {
 					  }
 				}
 			      `,
-        variables: {
-          to: address,
-          handle: gaslessModeHandle,
-          avatar: "",
-          metadata: "",
-          operator: "0x85AAc6211aC91E92594C01F8c9557026797493AE",
-        },
-      }),
-    });
+          variables: {
+            to: address,
+            handle: gaslessModeHandle,
+            avatar: "",
+            metadata: "",
+            operator: "0x85AAc6211aC91E92594C01F8c9557026797493AE",
+          },
+        }),
+      }
+    );
 
     const resData = await res.json();
 
@@ -410,29 +422,32 @@ export default function Home() {
 
   const relay = async (typedDataID: string, signature?: string) => {
     console.log("relay", typedDataID);
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "X-API-KEY": process.env.CYBERCONNECT_API_KEY,
-      } as any,
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "X-API-KEY": process.env.CYBERCONNECT_API_KEY,
+        } as any,
+        body: JSON.stringify({
+          query: `
 				mutation relay($input: RelayInput!) {
 					relay(input:$input) {
 						relayActionId
 					}
 				}
 				`,
-        variables: {
-          input: {
-            typedDataID,
-            signature,
+          variables: {
+            input: {
+              typedDataID,
+              signature,
+            },
           },
-        },
-      }),
-    });
+        }),
+      }
+    );
 
     const resData = await res.json();
 
@@ -441,15 +456,17 @@ export default function Home() {
   };
 
   const relayActionStatus = async (relayActionId: string) => {
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        "X-API-KEY": "3Oc2eWR771lttA7KoHYGEstNboFZqKVi",
-      },
-      body: JSON.stringify({
-        query: `query relayActionStatus($relayActionId: ID!) {
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          "X-API-KEY": "3Oc2eWR771lttA7KoHYGEstNboFZqKVi",
+        },
+        body: JSON.stringify({
+          query: `query relayActionStatus($relayActionId: ID!) {
 				relayActionStatus(relayActionId: $relayActionId){ 
 				... on RelayActionStatusResult {
 				txHash
@@ -463,11 +480,12 @@ export default function Home() {
 				}
 				}
 			      `,
-        variables: {
-          relayActionId,
-        },
-      }),
-    });
+          variables: {
+            relayActionId,
+          },
+        }),
+      }
+    );
 
     const resData = await res.json();
 
