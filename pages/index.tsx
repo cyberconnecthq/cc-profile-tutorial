@@ -429,7 +429,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          "X-API-KEY": process.env.CYBERCONNECT_API_KEY,
+          "X-API-KEY": process.env.NEXT_PUBLIC_CYBERCONNECT_API_KEY,
         } as any,
         body: JSON.stringify({
           query: `
