@@ -332,7 +332,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           query: `
-				  mutation createTypedData($to:AddressEVM!, $handle:String!, $avatar:URL!, $metadata:String!, $operator:AddressEVM!) {
+				  mutation createTypedData($to:AddressEVM!, $handle:String!, $avatar:URL!, $metadata:CID!, $operator:AddressEVM!) {
 					  createCreateProfileTypedData(input:{
 					    to:$to
 					    handle:$handle,
