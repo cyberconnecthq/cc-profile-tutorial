@@ -350,14 +350,16 @@ export default function Home() {
   };
 
   const getPrimaryProfile = async () => {
-    const res = await fetch("https://api.stg.cyberconnect.dev/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({
-        query: `
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT as string,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({
+          query: `
 	  query address($address: AddressEVM!) {
 		address(address: $address) {
 		  address
@@ -390,11 +392,12 @@ export default function Home() {
 		}
 	}
       `,
-        variables: {
-          address: address,
-        },
-      }),
-    });
+          variables: {
+            address: address,
+          },
+        }),
+      }
+    );
 
     const resData = await res.json();
 
